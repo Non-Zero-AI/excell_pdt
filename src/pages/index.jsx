@@ -10,24 +10,46 @@ const Home = () => {
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-600 to-primary-800 text-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6">
-              Professional Driver Training
-            </h1>
-            <p className="text-xl mb-8 text-primary-100">
-              Advance your career with industry-leading certification courses
-              for commercial and passenger drivers.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/courses" className="btn-primary bg-white text-primary-600 hover:bg-gray-100">
-                Browse Courses
-              </Link>
-              <Link to="/register" className="btn-secondary bg-primary-700 text-white hover:bg-primary-600 border-primary-500">
-                Get Started
-              </Link>
+      {/* Hero Section with video background */}
+      <section className="relative text-white">
+        {/* Video background */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-black/40" />
+          <iframe
+            src="https://player.cloudinary.com/embed/?cloud_name=dlwugvvn0&public_id=vecteezy_cargo-truck-with-cargo-trailer-is-driving-on-the-highway_47880046_yuvgyf&title=false&description=false&autoplay=true&muted=true&loop=true&controls=false&hide_context_menu=true&source_types[0]=hls"
+            title="Professional driver training hero video"
+            className="w-full h-full"
+            style={{ border: 'none' }}
+            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
+
+        {/* Content overlay */}
+        <div className="relative py-20 sm:py-24 md:py-28 bg-gradient-to-b from-black/60 via-black/30 to-black/60">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto text-center">
+              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 drop-shadow-lg">
+                Professional Driver Training
+              </h1>
+              <p className="text-lg md:text-xl mb-8 text-sky-100 max-w-2xl mx-auto drop-shadow">
+                Advance your career with industry-leading certification courses
+                for commercial and passenger drivers.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  to="/courses"
+                  className="btn-primary bg-white/95 text-primary-700 hover:bg-white shadow-lg shadow-black/30"
+                >
+                  Browse Courses
+                </Link>
+                <Link
+                  to="/register"
+                  className="btn-secondary bg-primary-700/95 text-white hover:bg-primary-600 border-primary-400 shadow-lg shadow-black/30"
+                >
+                  Get Started
+                </Link>
+              </div>
             </div>
           </div>
         </div>
