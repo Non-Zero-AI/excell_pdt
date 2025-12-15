@@ -1,0 +1,33 @@
+[
+  {
+    "id": "1",
+    "title": "Professional Driving Excellence and Adverse Weather Operations",
+    "category": "commercial",
+    "description": "Comprehensive training for commercial drivers covering advanced driving techniques and adverse weather operations.",
+    "price": 299.99,
+    "duration": 1200,
+    "instructor": "John Smith",
+    "level": "intermediate"
+  },
+  {
+    "id": "2",
+    "title": "Load Securement for Open Deck Loads",
+    "category": "commercial",
+    "description": "Learn proper techniques for securing loads on open deck vehicles to ensure safety and compliance.",
+    "price": 249.99,
+    "duration": 900,
+    "instructor": "Jane Doe",
+    "level": "beginner"
+  },
+  {
+    "id": "3",
+    "title": "Oversized Load Operations",
+    "category": "commercial",
+    "description": "Master the skills needed to safely transport oversized and overweight loads.",
+    "price": 349.99,
+    "duration": 1500,
+    "instructor": "Mike Johnson",
+    "level": "advanced"
+  }
+]
+
