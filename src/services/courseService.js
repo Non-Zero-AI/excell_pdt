@@ -11,8 +11,10 @@ export const fetchCourses = async (category = 'all') => {
   if (!isSupabaseConfigured()) {
     // Return mock data for development
     console.warn('Supabase not configured, using mock courses')
-    if (category === 'all') return mockCourses
-    return mockCourses.filter(course => course.category === category)
+    const courses = category === 'all' 
+      ? mockCourses 
+      : mockCourses.filter(course => course.category === category)
+    return { courses, error: null }
   }
 
   try {

@@ -6,7 +6,7 @@ import { COURSE_CATEGORIES } from '../utils/constants'
 const Home = () => {
   const { courses, loading } = useCourseData(COURSE_CATEGORIES.ALL)
 
-  const featuredCourses = courses.slice(0, 3)
+  const featuredCourses = courses && courses.length > 0 ? courses.slice(0, 3) : []
 
   return (
     <div>

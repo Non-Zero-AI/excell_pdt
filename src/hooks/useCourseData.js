@@ -18,16 +18,23 @@ export const useCourseData = (category = 'all') => {
     setLoading(true)
     setError(null)
     try {
-      const { courses: fetchedCourses, error: fetchError } = await fetchCourses(category)
+      const result = await fetchCourses(category)
       
-      if (fetchError) {
-        throw fetchError
+      // Handle both old format (array) and new format (object)
+      if (Array.isArray(result)) {
+        setCourses(result)
+      } else if (result && result.courses) {
+        if (result.error) {
+          throw result.error
+        }
+        setCourses(result.courses || [])
+      } else {
+        setCourses([])
       }
-      
-      setCourses(fetchedCourses)
     } catch (err) {
       console.error('Error loading courses:', err)
       setError(err.message || 'Failed to load courses')
+      setCourses([]) // Set empty array on error
     } finally {
       setLoading(false)
     }
