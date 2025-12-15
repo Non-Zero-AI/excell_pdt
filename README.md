@@ -155,12 +155,23 @@ See [QUIZ_PARSING_GUIDE.md](./QUIZ_PARSING_GUIDE.md) for details on parsing quiz
 
 ### Vercel (Recommended)
 
+See [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) for complete deployment guide.
+
+**Quick Steps:**
 1. Push your code to GitHub
-2. Import project in Vercel
-3. Add environment variables:
+2. Import project in Vercel (auto-detects Vite)
+3. Configure settings:
+   - Framework: Vite
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+4. Add environment variables (if using Supabase):
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
-4. Deploy!
+5. Deploy!
+
+**Configuration files:**
+- `vercel.json` - Already configured with SPA routing
+- `package.json` - Includes Node.js version requirement
 
 ### Other Platforms
 
