@@ -3,30 +3,64 @@ import { useCourseData } from '../hooks/useCourseData'
 import CourseCard from '../components/CourseCard'
 import { COURSE_CATEGORIES } from '../utils/constants'
 
+const HERO_VIDEO_URL = import.meta.env.VITE_HERO_VIDEO_URL
+
 const Home = () => {
   const { courses, loading } = useCourseData(COURSE_CATEGORIES.ALL)
 
   const featuredCourses = courses && courses.length > 0 ? courses.slice(0, 3) : []
 
+  // Check if URL is a Cloudinary embed URL and convert to direct video URL
+  const getVideoUrl = () => {
+    if (!HERO_VIDEO_URL) return null
+    
+    // If it's already a direct video URL (ends with .mp4, .webm, etc.), use it
+    if (HERO_VIDEO_URL.match(/\.(mp4|webm|ogg|mov)$/i)) {
+      return HERO_VIDEO_URL
+    }
+    
+    // If it's a Cloudinary embed URL, extract public_id and construct direct URL
+    const embedMatch = HERO_VIDEO_URL.match(/public_id=([^&]+)/)
+    if (embedMatch) {
+      const publicId = decodeURIComponent(embedMatch[1])
+      // Construct direct Cloudinary video URL with auto format and quality
+      return `https://res.cloudinary.com/dlwugvvn0/video/upload/f_auto,q_auto/${publicId}.mp4`
+    }
+    
+    return HERO_VIDEO_URL
+  }
+
+  const videoUrl = getVideoUrl()
+
   return (
     <div>
-      {/* Hero Section with video background */}
-      <section className="relative text-white">
-        {/* Video background */}
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute inset-0 bg-black/40" />
-          <iframe
-            src="https://player.cloudinary.com/embed/?cloud_name=dlwugvvn0&public_id=vecteezy_cargo-truck-with-cargo-trailer-is-driving-on-the-highway_47880046_yuvgyf&title=false&description=false&autoplay=true&muted=true&loop=true&controls=false&hide_context_menu=true&source_types[0]=hls"
-            title="Professional driver training hero video"
-            className="w-full h-full"
-            style={{ border: 'none' }}
-            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
+      {/* Hero Section with optional video background */}
+      <section
+        className={`relative text-white ${
+          videoUrl ? '' : 'bg-gradient-to-br from-primary-600 to-primary-800'
+        }`}
+      >
+        {/* Video background (when provided) */}
+        {videoUrl && (
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+            <video
+              src={videoUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40" />
+          </div>
+        )}
 
         {/* Content overlay */}
-        <div className="relative py-20 sm:py-24 md:py-28 bg-gradient-to-b from-black/60 via-black/30 to-black/60">
+        <div
+          className={`relative py-20 sm:py-24 md:py-28 ${
+            videoUrl ? 'bg-gradient-to-b from-black/60 via-black/30 to-black/60' : ''
+          }`}
+        >
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 drop-shadow-lg">
