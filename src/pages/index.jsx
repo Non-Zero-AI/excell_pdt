@@ -32,16 +32,25 @@ const Home = () => {
         {/* Video background iframe (when provided) */}
         {useVideoBackground && (
           <>
-            <div className="absolute inset-0 -z-10 overflow-hidden">
+            {/* Fallback gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-800" style={{ zIndex: 0 }} />
+            
+            {/* Video iframe */}
+            <div 
+              className="absolute inset-0 overflow-hidden"
+              style={{ zIndex: 1 }}
+            >
               <iframe
                 src={HERO_VIDEO_EMBED_URL}
-                className="absolute top-0 left-0 w-full h-full"
                 style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
                   width: '100%',
                   height: '100%',
-                  minHeight: '100%',
                   border: 'none',
-                  pointerEvents: 'none'
+                  pointerEvents: 'none',
+                  backgroundColor: 'transparent'
                 }}
                 allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
                 allowFullScreen={true}
@@ -49,21 +58,32 @@ const Home = () => {
                 title="Hero background video"
                 onLoad={() => {
                   console.log('✅ Hero video iframe loaded successfully')
+                  const iframe = document.querySelector('iframe[title="Hero background video"]')
+                  if (iframe) {
+                    console.log('Iframe element found:', {
+                      width: iframe.offsetWidth,
+                      height: iframe.offsetHeight,
+                      visible: iframe.offsetWidth > 0 && iframe.offsetHeight > 0
+                    })
+                  }
                 }}
                 onError={(e) => {
                   console.error('❌ Hero video iframe failed to load:', e)
                 }}
               />
             </div>
-            <div className="absolute inset-0 bg-black/40 -z-[5]" />
+            
+            {/* Dark overlay for text readability */}
+            <div className="absolute inset-0 bg-black/40" style={{ zIndex: 2 }} />
           </>
         )}
 
         {/* Content overlay */}
         <div
           className={`relative py-20 sm:py-24 md:py-28 ${
-            useVideoBackground ? 'bg-gradient-to-b from-black/60 via-black/30 to-black/60' : ''
+            useVideoBackground ? '' : ''
           }`}
+          style={{ zIndex: 2 }}
         >
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
