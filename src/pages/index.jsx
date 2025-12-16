@@ -23,87 +23,118 @@ const Home = () => {
 
   return (
     <div>
-      {/* Hero Section with optional video background */}
-      <section
-        className={`relative text-white min-h-[500px] ${
-          useVideoBackground ? '' : 'bg-gradient-to-br from-primary-600 to-primary-800'
-        }`}
-      >
-        {/* Video background iframe (when provided) */}
-        {useVideoBackground && (
-          <>
-            {/* Fallback gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-800" style={{ zIndex: 0 }} />
-            
-            {/* Video iframe */}
-            <div 
-              className="absolute inset-0 overflow-hidden"
-              style={{ zIndex: 1 }}
-            >
-              <iframe
-                src={HERO_VIDEO_EMBED_URL}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  border: 'none',
-                  pointerEvents: 'none',
-                  backgroundColor: 'transparent'
-                }}
-                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                allowFullScreen={true}
-                frameBorder="0"
-                title="Hero background video"
-                onLoad={() => {
-                  console.log('✅ Hero video iframe loaded successfully')
-                  const iframe = document.querySelector('iframe[title="Hero background video"]')
-                  if (iframe) {
-                    console.log('Iframe element found:', {
-                      width: iframe.offsetWidth,
-                      height: iframe.offsetHeight,
-                      visible: iframe.offsetWidth > 0 && iframe.offsetHeight > 0
-                    })
-                  }
-                }}
-                onError={(e) => {
-                  console.error('❌ Hero video iframe failed to load:', e)
-                }}
-              />
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-primary-600 to-primary-800 text-white">
+        <div className="container mx-auto px-4 py-12 md:py-20">
+          {/* Desktop: Two-column layout (video left, content right) */}
+          <div className="hidden md:grid md:grid-cols-2 md:gap-8 lg:gap-12 items-center min-h-[500px]">
+            {/* Video on the left */}
+            <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-2xl">
+              {useVideoBackground ? (
+                <iframe
+                  src={HERO_VIDEO_EMBED_URL}
+                  className="absolute top-0 left-0 w-full h-full"
+                  style={{
+                    border: 'none',
+                    pointerEvents: 'none'
+                  }}
+                  allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                  allowFullScreen={true}
+                  frameBorder="0"
+                  title="Hero background video"
+                  onLoad={() => {
+                    console.log('✅ Hero video iframe loaded successfully')
+                  }}
+                  onError={(e) => {
+                    console.error('❌ Hero video iframe failed to load:', e)
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center">
+                  <p className="text-white/50">Video unavailable</p>
+                </div>
+              )}
             </div>
-            
-            {/* Dark overlay for text readability */}
-            <div className="absolute inset-0 bg-black/40" style={{ zIndex: 2 }} />
-          </>
-        )}
 
-        {/* Content overlay */}
-        <div
-          className={`relative py-20 sm:py-24 md:py-28 ${
-            useVideoBackground ? '' : ''
-          }`}
-          style={{ zIndex: 2 }}
-        >
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 drop-shadow-lg">
+            {/* Content on the right */}
+            <div className="bg-gradient-to-br from-primary-600 to-primary-800 p-8 lg:p-12 rounded-lg">
+              <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight mb-6">
                 Professional Driver Training
               </h1>
-              <p className="text-lg md:text-xl mb-8 text-sky-100 max-w-2xl mx-auto drop-shadow">
+              <p className="text-lg lg:text-xl mb-8 text-primary-100">
                 Advance your career with industry-leading certification courses
                 for commercial and passenger drivers.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   to="/courses"
-                  className="btn-primary bg-white/95 text-primary-700 hover:bg-white shadow-lg shadow-black/30"
+                  className="btn-primary bg-white text-primary-700 hover:bg-gray-100 text-center"
                 >
                   Browse Courses
                 </Link>
                 <Link
                   to="/register"
-                  className="btn-secondary bg-primary-700/95 text-white hover:bg-primary-600 border-primary-400 shadow-lg shadow-black/30"
+                  className="btn-secondary bg-primary-700 text-white hover:bg-primary-600 border-primary-500 text-center"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile: Stacked layout (heading, video, subheading/buttons) */}
+          <div className="md:hidden space-y-6">
+            {/* Heading at top */}
+            <div className="text-center">
+              <h1 className="text-3xl font-extrabold tracking-tight mb-4">
+                Professional Driver Training
+              </h1>
+            </div>
+
+            {/* Video in middle */}
+            <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-xl">
+              {useVideoBackground ? (
+                <iframe
+                  src={HERO_VIDEO_EMBED_URL}
+                  className="absolute top-0 left-0 w-full h-full"
+                  style={{
+                    border: 'none',
+                    pointerEvents: 'none'
+                  }}
+                  allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                  allowFullScreen={true}
+                  frameBorder="0"
+                  title="Hero background video"
+                  onLoad={() => {
+                    console.log('✅ Hero video iframe loaded successfully (mobile)')
+                  }}
+                  onError={(e) => {
+                    console.error('❌ Hero video iframe failed to load (mobile):', e)
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center">
+                  <p className="text-white/50">Video unavailable</p>
+                </div>
+              )}
+            </div>
+
+            {/* Subheading and buttons below */}
+            <div className="bg-gradient-to-br from-primary-600 to-primary-800 p-6 rounded-lg text-center">
+              <p className="text-base mb-6 text-primary-100">
+                Advance your career with industry-leading certification courses
+                for commercial and passenger drivers.
+              </p>
+              <div className="flex flex-col gap-4">
+                <Link
+                  to="/courses"
+                  className="btn-primary bg-white text-primary-700 hover:bg-gray-100"
+                >
+                  Browse Courses
+                </Link>
+                <Link
+                  to="/register"
+                  className="btn-secondary bg-primary-700 text-white hover:bg-primary-600 border-primary-500"
                 >
                   Get Started
                 </Link>
