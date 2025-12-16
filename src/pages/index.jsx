@@ -5,29 +5,36 @@ import { COURSE_CATEGORIES } from '../utils/constants'
 
 const HERO_VIDEO_URL = import.meta.env.VITE_HERO_VIDEO_URL
 
+// Fallback: Direct Cloudinary video URL constructed from known public_id
+const DEFAULT_VIDEO_URL = 'https://res.cloudinary.com/dlwugvvn0/video/upload/f_auto,q_auto/vecteezy_cargo-truck-with-cargo-trailer-is-driving-on-the-highway_47880046_yuvgyf.mp4'
+
 const Home = () => {
   const { courses, loading } = useCourseData(COURSE_CATEGORIES.ALL)
 
   const featuredCourses = courses && courses.length > 0 ? courses.slice(0, 3) : []
 
-  // Check if URL is a Cloudinary embed URL and convert to direct video URL
+  // Get video URL - use env var if provided, otherwise use default
   const getVideoUrl = () => {
-    if (!HERO_VIDEO_URL) return null
-    
-    // If it's already a direct video URL (ends with .mp4, .webm, etc.), use it
-    if (HERO_VIDEO_URL.match(/\.(mp4|webm|ogg|mov)$/i)) {
+    // If environment variable is set, process it
+    if (HERO_VIDEO_URL) {
+      // If it's already a direct video URL (ends with .mp4, .webm, etc.), use it
+      if (HERO_VIDEO_URL.match(/\.(mp4|webm|ogg|mov)$/i)) {
+        return HERO_VIDEO_URL
+      }
+      
+      // If it's a Cloudinary embed URL, extract public_id and construct direct URL
+      const embedMatch = HERO_VIDEO_URL.match(/public_id=([^&]+)/)
+      if (embedMatch) {
+        const publicId = decodeURIComponent(embedMatch[1])
+        // Construct direct Cloudinary video URL with auto format and quality
+        return `https://res.cloudinary.com/dlwugvvn0/video/upload/f_auto,q_auto/${publicId}.mp4`
+      }
+      
       return HERO_VIDEO_URL
     }
     
-    // If it's a Cloudinary embed URL, extract public_id and construct direct URL
-    const embedMatch = HERO_VIDEO_URL.match(/public_id=([^&]+)/)
-    if (embedMatch) {
-      const publicId = decodeURIComponent(embedMatch[1])
-      // Construct direct Cloudinary video URL with auto format and quality
-      return `https://res.cloudinary.com/dlwugvvn0/video/upload/f_auto,q_auto/${publicId}.mp4`
-    }
-    
-    return HERO_VIDEO_URL
+    // Fallback to default video URL
+    return DEFAULT_VIDEO_URL
   }
 
   const videoUrl = getVideoUrl()
@@ -50,6 +57,12 @@ const Home = () => {
               loop
               playsInline
               className="w-full h-full object-cover"
+              onError={(e) => {
+                console.error('Video failed to load:', videoUrl, e)
+              }}
+              onLoadedData={() => {
+                console.log('Video loaded successfully:', videoUrl)
+              }}
             />
             <div className="absolute inset-0 bg-black/40" />
           </div>
