@@ -14,34 +14,49 @@ const Home = () => {
   // Use video embed if available, otherwise fallback to blue gradient
   const useVideoBackground = !!HERO_VIDEO_EMBED_URL
 
+  // Debug logging
+  if (useVideoBackground) {
+    console.log('Hero video URL:', HERO_VIDEO_EMBED_URL)
+  } else {
+    console.log('No video URL found, using gradient fallback')
+  }
+
   return (
     <div>
       {/* Hero Section with optional video background */}
       <section
-        className={`relative text-white ${
+        className={`relative text-white min-h-[500px] ${
           useVideoBackground ? '' : 'bg-gradient-to-br from-primary-600 to-primary-800'
         }`}
       >
         {/* Video background iframe (when provided) */}
         {useVideoBackground && (
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <iframe
-              src={HERO_VIDEO_EMBED_URL}
-              className="absolute top-0 left-0 w-full h-full object-cover"
-              style={{
-                width: '100%',
-                height: '100%',
-                aspectRatio: '16 / 9',
-                objectFit: 'cover',
-                pointerEvents: 'none'
-              }}
-              allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-              allowFullScreen
-              frameBorder="0"
-              title="Hero background video"
-            />
-            <div className="absolute inset-0 bg-black/40" />
-          </div>
+          <>
+            <div className="absolute inset-0 -z-10 overflow-hidden">
+              <iframe
+                src={HERO_VIDEO_EMBED_URL}
+                className="absolute top-0 left-0 w-full h-full"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  minHeight: '100%',
+                  border: 'none',
+                  pointerEvents: 'none'
+                }}
+                allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                allowFullScreen={true}
+                frameBorder="0"
+                title="Hero background video"
+                onLoad={() => {
+                  console.log('✅ Hero video iframe loaded successfully')
+                }}
+                onError={(e) => {
+                  console.error('❌ Hero video iframe failed to load:', e)
+                }}
+              />
+            </div>
+            <div className="absolute inset-0 bg-black/40 -z-[5]" />
+          </>
         )}
 
         {/* Content overlay */}
