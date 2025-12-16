@@ -3,66 +3,42 @@ import { useCourseData } from '../hooks/useCourseData'
 import CourseCard from '../components/CourseCard'
 import { COURSE_CATEGORIES } from '../utils/constants'
 
-const HERO_VIDEO_URL = import.meta.env.VITE_HERO_VIDEO_URL
-
-// Fallback: Direct Cloudinary video URL constructed from known public_id
-const DEFAULT_VIDEO_URL = 'https://res.cloudinary.com/dlwugvvn0/video/upload/f_auto,q_auto/vecteezy_cargo-truck-with-cargo-trailer-is-driving-on-the-highway_47880046_yuvgyf.mp4'
+const HERO_VIDEO_EMBED_URL = import.meta.env.VITE_HERO_VIDEO_URL || 
+  'https://player.cloudinary.com/embed/?cloud_name=dlwugvvn0&public_id=vecteezy_cargo-truck-with-cargo-trailer-is-driving-on-the-highway_47880046_yuvgyf&profile=Truck%20on%20Highway&title=false&description=false&autoplay=true&muted=true&loop=true&controls=false&hide_context_menu=true&source_types[0]=hls'
 
 const Home = () => {
   const { courses, loading } = useCourseData(COURSE_CATEGORIES.ALL)
 
   const featuredCourses = courses && courses.length > 0 ? courses.slice(0, 3) : []
 
-  // Get video URL - use env var if provided, otherwise use default
-  const getVideoUrl = () => {
-    // If environment variable is set, process it
-    if (HERO_VIDEO_URL) {
-      // If it's already a direct video URL (ends with .mp4, .webm, etc.), use it
-      if (HERO_VIDEO_URL.match(/\.(mp4|webm|ogg|mov)$/i)) {
-        return HERO_VIDEO_URL
-      }
-      
-      // If it's a Cloudinary embed URL, extract public_id and construct direct URL
-      const embedMatch = HERO_VIDEO_URL.match(/public_id=([^&]+)/)
-      if (embedMatch) {
-        const publicId = decodeURIComponent(embedMatch[1])
-        // Construct direct Cloudinary video URL with auto format and quality
-        return `https://res.cloudinary.com/dlwugvvn0/video/upload/f_auto,q_auto/${publicId}.mp4`
-      }
-      
-      return HERO_VIDEO_URL
-    }
-    
-    // Fallback to default video URL
-    return DEFAULT_VIDEO_URL
-  }
-
-  const videoUrl = getVideoUrl()
+  // Use video embed if available, otherwise fallback to blue gradient
+  const useVideoBackground = !!HERO_VIDEO_EMBED_URL
 
   return (
     <div>
       {/* Hero Section with optional video background */}
       <section
         className={`relative text-white ${
-          videoUrl ? '' : 'bg-gradient-to-br from-primary-600 to-primary-800'
+          useVideoBackground ? '' : 'bg-gradient-to-br from-primary-600 to-primary-800'
         }`}
       >
-        {/* Video background (when provided) */}
-        {videoUrl && (
+        {/* Video background iframe (when provided) */}
+        {useVideoBackground && (
           <div className="absolute inset-0 -z-10 overflow-hidden">
-            <video
-              src={videoUrl}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                console.error('Video failed to load:', videoUrl, e)
+            <iframe
+              src={HERO_VIDEO_EMBED_URL}
+              className="absolute top-0 left-0 w-full h-full object-cover"
+              style={{
+                width: '100%',
+                height: '100%',
+                aspectRatio: '16 / 9',
+                objectFit: 'cover',
+                pointerEvents: 'none'
               }}
-              onLoadedData={() => {
-                console.log('Video loaded successfully:', videoUrl)
-              }}
+              allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+              allowFullScreen
+              frameBorder="0"
+              title="Hero background video"
             />
             <div className="absolute inset-0 bg-black/40" />
           </div>
@@ -71,7 +47,7 @@ const Home = () => {
         {/* Content overlay */}
         <div
           className={`relative py-20 sm:py-24 md:py-28 ${
-            videoUrl ? 'bg-gradient-to-b from-black/60 via-black/30 to-black/60' : ''
+            useVideoBackground ? 'bg-gradient-to-b from-black/60 via-black/30 to-black/60' : ''
           }`}
         >
           <div className="container mx-auto px-4">
